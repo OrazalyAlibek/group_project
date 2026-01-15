@@ -1,6 +1,6 @@
-package com.company.data;
+package dormitory.data;
 
-import com.company.data.interfaces.IDB;
+import dormitory.data.interfaces.IDB;
 
 import java.sql.*;
 

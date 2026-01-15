@@ -1,4 +1,4 @@
-package com.company;
+package dormitory;
 
 import com.company.controllers.interfaces.IUserController;
 
