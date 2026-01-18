@@ -40,3 +40,8 @@ CREATE TABLE users (
 * MyApplication: Frontend of the system, handles interaction between the user and the controllers.
 
 > Repositories are the "hands" that go into the database, while Controllers are the "brain" of application.
+
+# 
+ 
+ Created by:
+> Alibek Orazaly, Medina Sugirbay, Sanzhar Serikov
