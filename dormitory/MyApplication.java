@@ -33,10 +33,17 @@ public class MyApplication {
                 int option = scanner.nextInt();
 
                 switch (option) {
-                    case 1: getAllUsersMenu(); break;
-                    case 2: getUserByIdMenu(); break;
-                    case 3: createUserMenu(); break;
-                    default: return;
+                    case 1:
+                        getAllUsersMenu();
+                        break;
+                    case 2:
+                        getUserByIdMenu();
+                        break;
+                    case 3:
+                        createUserMenu();
+                        break;
+                    default:
+                        return;
                 }
             } catch (InputMismatchException e) {
                 System.out.println("Input must be integer: " + e);
