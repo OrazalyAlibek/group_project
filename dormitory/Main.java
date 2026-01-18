@@ -1,14 +1,25 @@
 package dormitory;
 
+import dormitory.controllers.RoomController;
+import dormitory.controllers.UserController;
+import dormitory.controllers.interfaces.IRoomController;
+import dormitory.controllers.interfaces.IUserController;
+import dormitory.repositories.RoomRepository;
+import dormitory.repositories.UserRepository;
+import dormitory.repositories.interfaces.IRoomRepository;
+import dormitory.repositories.interfaces.IUserRepository;
 
 public class Main {
     public static void main(String[] args) {
 
         IDB db = new PostgresDB("jdbc:postgresql://localhost:5432", "postgres", "0000", "somedb");
-        IUserRepository repo = new UserRepository(db);
-        IUserController controller = new UserController(repo);
+        IUserRepository repo = new UserRepository();
+        IUserController controller = new RoomController();
 
-        MyApplication app = new MyApplication(controller);
+        IUserController userController = new UserController(userRepo);
+        IRoomController roomController = new RoomController(roomRepo, userRepo);
+
+        MyApplication app = new MyApplication(userController, roomController);
 
         app.start();
 

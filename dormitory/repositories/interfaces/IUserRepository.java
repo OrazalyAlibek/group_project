@@ -1,7 +1,13 @@
 package dormitory.repositories.interfaces;
 
+import dormitory.entities.User;
+import java.util.List;
+
 public interface IUserRepository {
-    boolean createUser (User user);
-    User findByEmail (String email);
-    User login (String email, String password);
+    boolean createUser(User user);
+    User getUserByEmail(String email);
+    User getUserById(int id);
+    User login(String email, String password);
+    boolean assignRoomToUser(int userId, int roomId);
+    List<User> getUsersByRoomId(int roomId);
 }

@@ -1,4 +1,4 @@
-package dormitory.entities;
+package dormitory.models.Room;
 
 public class Room {
 
