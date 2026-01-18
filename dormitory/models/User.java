@@ -8,7 +8,7 @@ public class User {
     private String email;
     private String password;
     private String gender;
-    private int roomId; // 0 if not booked
+    private int roomId;
 
     public User(String name, String surname, String email, String password, String gender) {
         this.name = name;

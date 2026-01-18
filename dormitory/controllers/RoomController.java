@@ -44,7 +44,6 @@ public class RoomController implements IRoomController {
         User user = userRepo.getUserById(userId);
         if (user == null) return "Error: User not found.";
 
-        // Business Logic: Capacity Check
         List<User> occupants = userRepo.getUsersByRoomId(roomId);
         if (occupants.size() >= room.getCapacity()) {
             return "Booking Failed: Room is FULL! (Capacity: " + room.getCapacity() + ")";
