@@ -14,7 +14,7 @@ import dormitory.repositories.interfaces.IUserRepository;
 public class Main {
     public static void main(String[] args) {
 
-        IDB db = new PostgresDB("jdbc:postgresql://localhost:5432", "postgres", "0000", "dorm_db");
+        IDB db = new PostgresDB("jdbc:postgresql://localhost:5432", "postgres", "12345", "dorm_db");
 
         IUserRepository userRepo = new UserRepository(db);
         IRoomRepository roomRepo = new RoomRepository(db);
