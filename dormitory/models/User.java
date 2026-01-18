@@ -1,4 +1,4 @@
-package dormitory.models.User;
+package dormitory.models;
 
 public class User {
 
