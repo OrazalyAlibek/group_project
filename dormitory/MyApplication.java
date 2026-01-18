@@ -1,6 +1,5 @@
 package dormitory;
 
-import com.company.controllers.interfaces.IUserController;
 
 import java.util.InputMismatchException;
 import java.util.Scanner;
@@ -8,11 +7,6 @@ import java.util.Scanner;
 public class MyApplication {
     private final Scanner scanner = new Scanner(System.in);
 
-    private final IUserController controller;
-
-    public MyApplication(IUserController controller) {
-        this.controller = controller;
-    }
 
     private void mainMenu() {
         System.out.println();
@@ -33,10 +27,14 @@ public class MyApplication {
                 int option = scanner.nextInt();
 
                 switch (option) {
-                    case 1: getAllUsersMenu(); break;
-                    case 2: getUserByIdMenu(); break;
-                    case 3: createUserMenu(); break;
-                    default: return;
+                    case 1:
+                        break;
+                    case 2:
+                        break;
+                    case 3:
+                        break;
+                    default:
+                        return;
                 }
             } catch (InputMismatchException e) {
                 System.out.println("Input must be integer: " + e);
@@ -47,31 +45,5 @@ public class MyApplication {
 
             System.out.println("*************************");
         }
-    }
-
-    public void getAllUsersMenu() {
-        String response = controller.getAllUsers();
-        System.out.println(response);
-    }
-
-    public void getUserByIdMenu() {
-        System.out.println("Please enter id");
-
-        int id = scanner.nextInt();
-
-        String response = controller.getUser(id);
-        System.out.println(response);
-    }
-
-    public void createUserMenu() {
-        System.out.println("Please enter name");
-        String name = scanner.next();
-        System.out.println("Please enter surname");
-        String surname = scanner.next();
-        System.out.println("Please enter gender (male/female)");
-        String gender = scanner.next();
-
-        String response = controller.createUser(name, surname, gender);
-        System.out.println(response);
     }
 }
