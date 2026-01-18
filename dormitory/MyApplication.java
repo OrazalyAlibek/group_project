@@ -1,84 +1,112 @@
-package dormitory;
 
-import com.company.controllers.interfaces.IUserController;
+        package dormitory;
 
-import java.util.InputMismatchException;
+import dormitory.controllers.interfaces.IRoomController;
+import dormitory.controllers.interfaces.IUserController;
+import dormitory.models.User;
 import java.util.Scanner;
 
 public class MyApplication {
-    private final Scanner scanner = new Scanner(System.in);
+    private final IUserController userController;
+    private final IRoomController roomController;
+    private final Scanner scanner;
+    private User currentUser = null;
 
-    private final IUserController controller;
-
-    public MyApplication(IUserController controller) {
-        this.controller = controller;
-    }
-
-    private void mainMenu() {
-        System.out.println();
-        System.out.println("Welcome to My Application");
-        System.out.println("Select option:");
-        System.out.println("1. Get all users");
-        System.out.println("2. Get user by id");
-        System.out.println("3. Create user");
-        System.out.println("0. Exit");
-        System.out.println();
-        System.out.print("Enter option (1-3): ");
+    public MyApplication(IUserController userController, IRoomController roomController) {
+        this.userController = userController;
+        this.roomController = roomController;
+        this.scanner = new Scanner(System.in);
     }
 
     public void start() {
         while (true) {
-            mainMenu();
+            System.out.println("\n--- DORMITORY SYSTEM ---");
+            if (currentUser == null) {
+                System.out.println("1. Register");
+                System.out.println("2. Login");
+            } else {
+                System.out.println("Logged in as: " + currentUser.getName());
+                System.out.println("3. View All Rooms");
+                System.out.println("4. Book a Room");
+                System.out.println("5. Check Roommates");
+                System.out.println("6. Logout");
+            }
+            System.out.println("0. Exit");
+            System.out.print("Select: ");
+
             try {
                 int option = scanner.nextInt();
+                scanner.nextLine(); // consume newline
 
-                switch (option) {
-                    case 1:
-                        getAllUsersMenu();
-                        break;
-                    case 2:
-                        getUserByIdMenu();
-                        break;
-                    case 3:
-                        createUserMenu();
-                        break;
-                    default:
-                        return;
+                if (currentUser == null) {
+                    if (option == 1) registerMenu();
+                    else if (option == 2) loginMenu();
+                    else if (option == 0) break;
+                    else System.out.println("Invalid option.");
+                } else {
+                    switch (option) {
+                        case 3:
+                            System.out.println(roomController.getAllRooms());
+                            break;
+                        case 4:
+                            bookRoomMenu();
+                            break;
+                        case 5:
+                            checkRoommatesMenu();
+                            break;
+                        case 6:
+                            currentUser = null;
+                            System.out.println("Logged out.");
+                            break;
+                        case 0:
+                            return;
+                        default:
+                            System.out.println("Invalid option.");
+                    }
                 }
-            } catch (InputMismatchException e) {
-                System.out.println("Input must be integer: " + e);
-                scanner.nextLine(); // to ignore incorrect input
             } catch (Exception e) {
-                System.out.println(e.getMessage());
+                System.out.println("Input error. Please enter a number.");
+                scanner.nextLine();
             }
-
-            System.out.println("*************************");
         }
     }
 
-    public void getAllUsersMenu() {
-        String response = controller.getAllUsers();
-        System.out.println(response);
+    private void registerMenu() {
+        System.out.print("Name: "); String name = scanner.nextLine();
+        System.out.print("Surname: "); String surname = scanner.nextLine();
+        System.out.print("Email: "); String email = scanner.nextLine();
+        System.out.print("Password: "); String password = scanner.nextLine();
+        System.out.print("Gender: "); String gender = scanner.nextLine();
+
+        System.out.println(userController.register(name, surname, email, password, gender));
     }
 
-    public void getUserByIdMenu() {
-        System.out.println("Please enter id");
+    private void loginMenu() {
+        System.out.print("Email: "); String email = scanner.nextLine();
+        System.out.print("Password: "); String password = scanner.nextLine();
 
-        int id = scanner.nextInt();
-
-        String response = controller.getUser(id);
-        System.out.println(response);
+        User user = userController.login(email, password);
+        if (user != null) {
+            currentUser = user;
+            System.out.println("Welcome back!");
+        } else {
+            System.out.println("Login failed. Check credentials.");
+        }
     }
 
-    public void createUserMenu() {
-        System.out.println("Please enter name");
-        String name = scanner.next();
-        System.out.println("Please enter surname");
-        String surname = scanner.next();
-        System.out.println("Please enter gender (male/female)");
-        String gender = scanner.next();
+    private void bookRoomMenu() {
+        System.out.println(roomController.getAllRooms());
+        System.out.print("Enter Room ID to book: ");
+        int roomId = scanner.nextInt();
 
-        String response = controller.createUser(name, surname, gender);
-        System.out.println(response);
+        System.out.println(roomController.bookRoom(currentUser.getId(), roomId));
+    }
+
+
+    private void checkRoommatesMenu() {
+        System.out.print("Enter Room ID to check: ");
+        int roomId = scanner.nextInt();
+
+        System.out.println(roomController.getRoommates(roomId));
     }
 }
