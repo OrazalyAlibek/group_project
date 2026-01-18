@@ -22,7 +22,7 @@ public class Main {
         IUserController userController = new UserController(userRepo);
         IRoomController roomController = new RoomController(roomRepo, userRepo);
 
-        MyApplication app = new MyApplication(UserController, RoomController);
+        MyApplication app = new MyApplication(userController, roomController);
 
         app.start();
 

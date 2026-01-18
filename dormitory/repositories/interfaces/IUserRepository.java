@@ -1,6 +1,6 @@
 package dormitory.repositories.interfaces;
 
-import dormitory.entities.User;
+import dormitory.models.User;
 import java.util.List;
 
 public interface IUserRepository {

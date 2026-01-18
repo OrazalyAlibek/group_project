@@ -1,6 +1,6 @@
 package dormitory.repositories.interfaces;
 
-import dormitory.entities.Room;
+import dormitory.models.Room;
 import java.util.List;
 
 public interface IRoomRepository {
