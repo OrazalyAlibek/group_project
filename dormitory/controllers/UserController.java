@@ -26,4 +26,5 @@ public class UserController implements IUserController {
     @Override
     public User login(String email, String password) {
         return repo.login(email, password);
+    }
 }
