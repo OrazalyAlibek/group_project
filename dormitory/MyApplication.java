@@ -1,5 +1,4 @@
-
-        package dormitory;
+package dormitory;
 
 import dormitory.controllers.interfaces.IRoomController;
 import dormitory.controllers.interfaces.IUserController;
@@ -36,7 +35,7 @@ public class MyApplication {
 
             try {
                 int option = scanner.nextInt();
-                scanner.nextLine(); // consume newline
+                scanner.nextLine();
 
                 if (currentUser == null) {
                     if (option == 1) registerMenu();

@@ -12,9 +12,13 @@ import dormitory.repositories.interfaces.IRoomRepository;
 import dormitory.repositories.interfaces.IUserRepository;
 
 public class Main {
-    public static void main(String[] args) {
+    public static void main(String[] args){
+        String url = System.getenv("DB_URL");
+        String username = System.getenv("DB_USERNAME");
+        String password = System.getenv("DB_PASSWORD");
+        String dbName = System.getenv("DB_NAME");
 
-        IDB db = new PostgresDB("jdbc:postgresql://localhost:5432", "postgres", "12345", "dorm_db");
+        IDB db = new PostgresDB(url, username, password, dbName);
 
         IUserRepository userRepo = new UserRepository(db);
         IRoomRepository roomRepo = new RoomRepository(db);
