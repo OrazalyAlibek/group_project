@@ -7,4 +7,5 @@ public interface IRoomRepository {
     boolean addRoom(Room room);
     List<Room> getAllRooms();
     Room getRoomById(int id);
+    List<String> getRoomsWithCategoryDetails();
 }
