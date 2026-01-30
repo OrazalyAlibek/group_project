@@ -17,7 +17,7 @@ public class UserRepository implements IUserRepository {
     @Override
     public boolean createUser(User user) {
         Connection con = db.getConnection();
-        String sql = "INSERT INTO users(name, surname, email, password, gender) VALUES (?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO users(name, surname, email, password, gender, role) VALUES (?, ?, ?, ?, ?, ?)";
         try {
             PreparedStatement st = con.prepareStatement(sql);
             st.setString(1, user.getName());
@@ -25,6 +25,7 @@ public class UserRepository implements IUserRepository {
             st.setString(3, user.getEmail());
             st.setString(4, user.getPassword());
             st.setString(5, user.getGender());
+            st.setString(6, user.getRole());
             return st.executeUpdate() > 0;
         } catch (SQLException e) { e.printStackTrace(); }
         return false;
@@ -39,7 +40,7 @@ public class UserRepository implements IUserRepository {
             st.setString(1, email);
             ResultSet rs = st.executeQuery();
             if (rs.next()) {
-                User u = new User(rs.getString("name"), rs.getString("surname"), rs.getString("email"), rs.getString("password"), rs.getString("gender"));
+                User u = new User(rs.getString("name"), rs.getString("surname"), rs.getString("email"), rs.getString("password"), rs.getString("gender"), rs.getString("role"));
                 u.setId(rs.getInt("id"));
                 u.setRoomId(rs.getInt("room_id"));
                 return u;
@@ -57,7 +58,7 @@ public class UserRepository implements IUserRepository {
             st.setInt(1, id);
             ResultSet rs = st.executeQuery();
             if (rs.next()) {
-                User u = new User(rs.getString("name"), rs.getString("surname"), rs.getString("email"), rs.getString("password"), rs.getString("gender"));
+                User u = new User(rs.getString("name"), rs.getString("surname"), rs.getString("email"), rs.getString("password"), rs.getString("gender"), rs.getString("role"));
                 u.setId(rs.getInt("id"));
                 u.setRoomId(rs.getInt("room_id"));
                 return u;
@@ -96,7 +97,7 @@ public class UserRepository implements IUserRepository {
             st.setInt(1, roomId);
             ResultSet rs = st.executeQuery();
             while (rs.next()) {
-                User u = new User(rs.getString("name"), rs.getString("surname"), rs.getString("email"), "hidden", rs.getString("gender"));
+                User u = new User(rs.getString("name"), rs.getString("surname"), rs.getString("email"), "hidden", rs.getString("gender"), rs.getString("role"));
                 u.setId(rs.getInt("id"));
                 u.setRoomId(rs.getInt("room_id"));
                 users.add(u);

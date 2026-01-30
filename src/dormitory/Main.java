@@ -6,6 +6,7 @@ import dormitory.controllers.interfaces.IRoomController;
 import dormitory.controllers.interfaces.IUserController;
 import dormitory.data.PostgresDB;
 import dormitory.data.interfaces.IDB;
+import dormitory.factories.RepositoryFactory;
 import dormitory.repositories.RoomRepository;
 import dormitory.repositories.UserRepository;
 import dormitory.repositories.interfaces.IRoomRepository;
@@ -20,14 +21,13 @@ public class Main {
 
         IDB db = new PostgresDB(url, username, password, dbName);
 
-        IUserRepository userRepo = new UserRepository(db);
-        IRoomRepository roomRepo = new RoomRepository(db);
+        IUserRepository userRepo = RepositoryFactory.createUserRepository(db);
+        IRoomRepository roomRepo = RepositoryFactory.createRoomRepository(db);
 
         IUserController userController = new UserController(userRepo);
         IRoomController roomController = new RoomController(roomRepo, userRepo);
 
         MyApplication app = new MyApplication(userController, roomController);
-
         app.start();
 
         db.close();
