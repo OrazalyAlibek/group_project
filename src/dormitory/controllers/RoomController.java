@@ -5,8 +5,9 @@ import dormitory.models.Room;
 import dormitory.models.User;
 import dormitory.repositories.interfaces.IRoomRepository;
 import dormitory.repositories.interfaces.IUserRepository;
+import dormitory.utils.Validator;
 import java.util.List;
-
+import java.util.stream.Collectors;
 
 public class RoomController implements IRoomController {
     private final IRoomRepository roomRepo;
@@ -18,8 +19,11 @@ public class RoomController implements IRoomController {
     }
 
     @Override
-    public String createRoom(int number, int capacity, double price) {
-        Room room = new Room(number, capacity, price);
+    public String createRoom(int number, int capacity, double price, int categoryId) {
+        if (!Validator.isPositive(capacity) || !Validator.isPositive(price)) {
+            return "Error: Capacity and Price must be positive.";
+        }
+        Room room = new Room(number, capacity, price, categoryId);
         boolean created = roomRepo.addRoom(room);
         return created ? "Room Added!" : "Failed to add room.";
     }
@@ -28,12 +32,31 @@ public class RoomController implements IRoomController {
     public String getAllRooms() {
         List<Room> rooms = roomRepo.getAllRooms();
         if (rooms.isEmpty()) return "No rooms found.";
-
         StringBuilder sb = new StringBuilder();
         for (Room r : rooms) {
             sb.append(r.toString()).append("\n");
         }
         return sb.toString();
+    }
+
+    @Override
+    public String getAvailableRoomsByPrice(double maxPrice) {
+        List<Room> allRooms = roomRepo.getAllRooms();
+        List<Room> filtered = allRooms.stream()
+                .filter(r -> r.getPrice() <= maxPrice)
+                .collect(Collectors.toList());
+
+        if (filtered.isEmpty()) return "No rooms under " + maxPrice;
+        StringBuilder sb = new StringBuilder();
+        filtered.forEach(r -> sb.append(r.toString()).append("\n"));
+        return sb.toString();
+    }
+
+    @Override
+    public String getRoomsWithCategoryDetails() {
+        List<String> details = roomRepo.getRoomsWithCategoryDetails();
+        if (details.isEmpty()) return "No data.";
+        return String.join("\n", details);
     }
 
     @Override
@@ -46,7 +69,7 @@ public class RoomController implements IRoomController {
 
         List<User> occupants = userRepo.getUsersByRoomId(roomId);
         if (occupants.size() >= room.getCapacity()) {
-            return "Booking Failed: Room is FULL! (Capacity: " + room.getCapacity() + ")";
+            return "Booking Failed: Room is FULL.";
         }
 
         boolean success = userRepo.assignRoomToUser(userId, roomId);
@@ -57,8 +80,7 @@ public class RoomController implements IRoomController {
     public String getRoommates(int roomId) {
         List<User> users = userRepo.getUsersByRoomId(roomId);
         if (users.isEmpty()) return "Room is empty.";
-
-        StringBuilder sb = new StringBuilder("Occupants in Room ID " + roomId + ":\n");
+        StringBuilder sb = new StringBuilder("Occupants:\n");
         for (User u : users) {
             sb.append("- ").append(u.getName()).append(" ").append(u.getSurname()).append("\n");
         }
