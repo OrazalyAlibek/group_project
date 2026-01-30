@@ -5,4 +5,6 @@ public interface IRoomController {
     String getAllRooms ();
     String bookRoom (int userId, int roomId);
     String getRoommates (int roomId);
+    String getAvailableRoomByPrice (double maxPrice);
+    String getRoomsWithCategoryDetails();
 }
