@@ -7,6 +7,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class PostgresDB implements IDB {
+    private static PostgresDB instance;
     private String host;
     private String username;
     private String password;
@@ -14,11 +15,18 @@ public class PostgresDB implements IDB {
 
     private Connection connection;
 
-    public PostgresDB(String host, String username, String password, String dbName) {
-        setHost(host);
-        setUsername(username);
-        setPassword(password);
-        setDbName(dbName);
+    private PostgresDB(String host, String username, String password, String dbName) {
+        this.host = host;
+        this.username = username;
+        this.password = password;
+        this.dbName = dbName;
+    }
+
+    public static PostgresDB getInstance(String host, String username, String password, String dbName) {
+        if (instance == null) {
+            instance = new PostgresDB(host, username, password, dbName);
+        }
+        return instance;
     }
 
     @Override
@@ -41,37 +49,7 @@ public class PostgresDB implements IDB {
         }
     }
 
-    public String getHost() {
-        return host;
-    }
 
-    public void setHost(String host) {
-        this.host = host;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getDbName() {
-        return dbName;
-    }
-
-    public void setDbName(String dbName) {
-        this.dbName = dbName;
-    }
 
     public void close() {
         if (connection != null) {

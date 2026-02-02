@@ -47,6 +47,27 @@ public class RoomRepository implements IRoomRepository {
     }
 
     @Override
+    public List<String> getRoomsByCategory(String categoryName) {
+        Connection con = db.getConnection();
+        String sql = "SELECT r.*, c.name as cat_name FROM rooms r " +
+                "JOIN categories c ON r.category_id = c.id " +
+                "WHERE UPPER(c.name) = UPPER(?)";
+
+        List<String> results = new ArrayList<>();
+        try {
+            PreparedStatement st = con.prepareStatement(sql);
+            st.setString(1, categoryName);
+            ResultSet rs = st.executeQuery();
+            while (rs.next()) {
+                String s = "ID: " + rs.getInt("id") + " | Room #" + rs.getInt("room_number") +
+                        " | $" + rs.getDouble("price_per_month") + " | " + rs.getString("cat_name");
+                results.add(s);
+            }
+        } catch (SQLException e) { e.printStackTrace(); }
+        return results;
+    }
+
+    @Override
     public Room getRoomById(int id) {
         Connection con = db.getConnection();
         String sql = "SELECT * FROM rooms WHERE id = ?";

@@ -40,10 +40,7 @@ public class UserRepository implements IUserRepository {
             st.setString(1, email);
             ResultSet rs = st.executeQuery();
             if (rs.next()) {
-                User u = new User(rs.getString("name"), rs.getString("surname"), rs.getString("email"), rs.getString("password"), rs.getString("gender"), rs.getString("role"));
-                u.setId(rs.getInt("id"));
-                u.setRoomId(rs.getInt("room_id"));
-                return u;
+                return extractUser(rs);
             }
         } catch (SQLException e) { e.printStackTrace(); }
         return null;
@@ -58,10 +55,7 @@ public class UserRepository implements IUserRepository {
             st.setInt(1, id);
             ResultSet rs = st.executeQuery();
             if (rs.next()) {
-                User u = new User(rs.getString("name"), rs.getString("surname"), rs.getString("email"), rs.getString("password"), rs.getString("gender"), rs.getString("role"));
-                u.setId(rs.getInt("id"));
-                u.setRoomId(rs.getInt("room_id"));
-                return u;
+                return extractUser(rs);
             }
         } catch (SQLException e) { e.printStackTrace(); }
         return null;
@@ -88,6 +82,18 @@ public class UserRepository implements IUserRepository {
     }
 
     @Override
+    public boolean removeUserFromRoom(int userId) {
+        Connection con = db.getConnection();
+        String sql = "UPDATE users SET room_id = NULL WHERE id = ?";
+        try {
+            PreparedStatement st = con.prepareStatement(sql);
+            st.setInt(1, userId);
+            return st.executeUpdate() > 0;
+        } catch (SQLException e) { e.printStackTrace(); }
+        return false;
+    }
+
+    @Override
     public List<User> getUsersByRoomId(int roomId) {
         Connection con = db.getConnection();
         String sql = "SELECT * FROM users WHERE room_id = ?";
@@ -97,12 +103,16 @@ public class UserRepository implements IUserRepository {
             st.setInt(1, roomId);
             ResultSet rs = st.executeQuery();
             while (rs.next()) {
-                User u = new User(rs.getString("name"), rs.getString("surname"), rs.getString("email"), "hidden", rs.getString("gender"), rs.getString("role"));
-                u.setId(rs.getInt("id"));
-                u.setRoomId(rs.getInt("room_id"));
-                users.add(u);
+                users.add(extractUser(rs));
             }
         } catch (SQLException e) { e.printStackTrace(); }
         return users;
+    }
+
+    private User extractUser(ResultSet rs) throws SQLException {
+        User u = new User(rs.getString("name"), rs.getString("surname"), rs.getString("email"), rs.getString("password"), rs.getString("gender"), rs.getString("role"));
+        u.setId(rs.getInt("id"));
+        u.setRoomId(rs.getInt("room_id"));
+        return u;
     }
 }

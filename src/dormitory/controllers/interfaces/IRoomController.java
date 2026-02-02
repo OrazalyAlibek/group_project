@@ -7,4 +7,6 @@ public interface IRoomController {
     String getRoommates (int roomId);
     String getAvailableRoomsByPrice (double maxPrice);
     String getRoomsWithCategoryDetails();
+    String filterRoomsByCategory (String categoryName);
+    String evictUser(int userId);
 }

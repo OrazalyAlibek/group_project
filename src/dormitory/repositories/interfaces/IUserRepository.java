@@ -9,5 +9,6 @@ public interface IUserRepository {
     User getUserById(int id);
     User login(String email, String password);
     boolean assignRoomToUser(int userId, int roomId);
+    boolean removeUserFromRoom(int userId);
     List<User> getUsersByRoomId(int roomId);
 }

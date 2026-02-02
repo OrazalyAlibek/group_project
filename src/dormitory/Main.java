@@ -19,7 +19,7 @@ public class Main {
         String password = System.getenv("DB_PASSWORD");
         String dbName = System.getenv("DB_NAME");
 
-        IDB db = new PostgresDB(url, username, password, dbName);
+        IDB db = PostgresDB.getInstance(url, username, password, dbName);
 
         IUserRepository userRepo = RepositoryFactory.createUserRepository(db);
         IRoomRepository roomRepo = RepositoryFactory.createRoomRepository(db);
