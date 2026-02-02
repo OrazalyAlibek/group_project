@@ -40,40 +40,40 @@ public class RoomController implements IRoomController {
     }
 
     @Override
-    public String getAvailableRoomsByPrice(double maxPrice) {
-        List<Room> allRooms = roomRepo.getAllRooms();
-        List<Room> filtered = allRooms.stream()
-                .filter(r -> r.getPrice() <= maxPrice)
-                .collect(Collectors.toList());
-
-        if (filtered.isEmpty()) return "No rooms under " + maxPrice;
-        StringBuilder sb = new StringBuilder();
-        filtered.forEach(r -> sb.append(r.toString()).append("\n"));
-        return sb.toString();
-    }
-
-    @Override
-    public String getRoomsWithCategoryDetails() {
-        List<String> details = roomRepo.getRoomsWithCategoryDetails();
-        if (details.isEmpty()) return "No data.";
-        return String.join("\n", details);
+    public String filterRoomsByCategory(String categoryName) {
+        List<String> rooms = roomRepo.getRoomsByCategory(categoryName);
+        if (rooms.isEmpty()) return "No rooms found for category: " + categoryName;
+        return String.join("\n", rooms);
     }
 
     @Override
     public String bookRoom(int userId, int roomId) {
-        Room room = roomRepo.getRoomById(roomId);
-        if (room == null) return "Error: Room not found.";
-
         User user = userRepo.getUserById(userId);
         if (user == null) return "Error: User not found.";
 
-        List<User> occupants = userRepo.getUsersByRoomId(roomId);
-        if (occupants.size() >= room.getCapacity()) {
-            return "Booking Failed: Room is FULL.";
+        if (user.getRoomId() > 0) {
+            return "Booking Failed: You are already assigned to Room " + user.getRoomId() +
+                    ". Please ask an Admin to remove you before switching.";
         }
 
-        boolean success = userRepo.assignRoomToUser(userId, roomId);
-        return success ? "Success! Booked Room " + room.getRoomNumber() : "DB Error.";
+        Room room = roomRepo.getRoomById(roomId);
+        if (room == null) return "Error: Room not found.";
+
+        List<User> occupants = userRepo.getUsersByRoomId(roomId);
+        if (occupants.size() >= room.getCapacity()) return "Booking Failed: Room is FULL.";
+
+
+        return userRepo.assignRoomToUser(userId, roomId) ? "Success! Booked Room " + room.getRoomNumber() : "DB Error.";
+    }
+
+    @Override
+    public String evictUser(int userId) {
+        User user = userRepo.getUserById(userId);
+        if (user == null) return "User not found.";
+        if (user.getRoomId() == 0) return "User is not in any room.";
+
+        boolean success = userRepo.removeUserFromRoom(userId);
+        return success ? "User " + user.getName() + " removed from room. They can now book a new one." : "DB Error.";
     }
 
     @Override
@@ -85,5 +85,21 @@ public class RoomController implements IRoomController {
             sb.append("- ").append(u.getName()).append(" ").append(u.getSurname()).append("\n");
         }
         return sb.toString();
+    }
+    @Override
+    public String getAvailableRoomsByPrice(double maxPrice) {
+        List<Room> allRooms = roomRepo.getAllRooms();
+        List<Room> filtered = allRooms.stream().filter(r -> r.getPrice() <= maxPrice).collect(Collectors.toList());
+        if (filtered.isEmpty()) return "No rooms under " + maxPrice;
+        StringBuilder sb = new StringBuilder();
+        filtered.forEach(r -> sb.append(r.toString()).append("\n"));
+        return sb.toString();
+    }
+
+    @Override
+    public String getRoomsWithCategoryDetails() {
+        List<String> details = roomRepo.getRoomsWithCategoryDetails();
+        if (details.isEmpty()) return "No data.";
+        return String.join("\n", details);
     }
 }
