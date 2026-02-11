@@ -87,13 +87,13 @@ public class RoomRepository implements IRoomRepository {
     @Override
     public List<String> getRoomsWithCategoryDetails() {
         Connection con = db.getConnection();
-        String sql = "SELECT r.room_number, r.price_per_month, c.name FROM rooms r LEFT JOIN categories c ON r.category_id = c.id";
+        String sql = "SELECT r.id, r.room_number, r.price_per_month, c.name FROM rooms r LEFT JOIN categories c ON r.category_id = c.id";
         List<String> result = new ArrayList<>();
         try {
             Statement st = con.createStatement();
             ResultSet rs = st.executeQuery(sql);
             while(rs.next()) {
-                result.add("Room " + rs.getInt("room_number") + " [" + rs.getString("name") + "] Price: " + rs.getDouble("price_per_month"));
+                result.add("[ID: " + rs.getInt("id") + "] Room " + rs.getInt("room_number") + " [" + rs.getString("name") + "] Price: " + rs.getDouble("price_per_month"));
             }
         } catch (SQLException e) { e.printStackTrace(); }
         return result;

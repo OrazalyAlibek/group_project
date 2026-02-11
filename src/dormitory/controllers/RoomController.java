@@ -89,7 +89,8 @@ public class RoomController implements IRoomController {
     @Override
     public String getAvailableRoomsByPrice(double maxPrice) {
         List<Room> allRooms = roomRepo.getAllRooms();
-        List<Room> filtered = allRooms.stream().filter(r -> r.getPrice() <= maxPrice).collect(Collectors.toList());
+        List<Room> filtered = allRooms.stream().filter(r -> r.getPrice() <= maxPrice)
+                .collect(Collectors.toList());
         if (filtered.isEmpty()) return "No rooms under " + maxPrice;
         StringBuilder sb = new StringBuilder();
         filtered.forEach(r -> sb.append(r.toString()).append("\n"));
@@ -99,7 +100,11 @@ public class RoomController implements IRoomController {
     @Override
     public String getRoomsWithCategoryDetails() {
         List<String> details = roomRepo.getRoomsWithCategoryDetails();
+        StringBuilder sb = new StringBuilder();
         if (details.isEmpty()) return "No data.";
-        return String.join("\n", details);
+        for (String s : details) {
+            sb.append(s).append("\n");
+        }
+        return sb.toString();
     }
 }

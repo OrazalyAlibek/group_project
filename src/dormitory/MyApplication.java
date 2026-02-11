@@ -30,7 +30,7 @@ public class MyApplication {
                 System.out.println("4. Filter Rooms by Category (VIP, Standard, Economy)");
                 System.out.println("5. Filter Rooms by Price");
                 System.out.println("6. Book a Room");
-                System.out.println("7. My Room / Roommates");
+                System.out.println("7. My Roommates");
 
                 if ("ADMIN".equalsIgnoreCase(currentUser.getRole())) {
                     System.out.println("---------- ADMIN PANEL ----------");
@@ -122,6 +122,7 @@ public class MyApplication {
     }
 
     private void bookRoomMenu() {
+        System.out.println(roomController.getRoomsWithCategoryDetails());
         System.out.print("Enter Room ID to book: ");
         int rid = scanner.nextInt();
         String result = roomController.bookRoom(currentUser.getId(), rid);

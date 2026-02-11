@@ -49,8 +49,6 @@ public class PostgresDB implements IDB {
         }
     }
 
-
-
     public void close() {
         if (connection != null) {
             try {
